@@ -23,3 +23,7 @@ repositories:
     type: git
     url: https://github.com/Juancams/openni2_camera.git
     version: ros2
+  ThirdParty/sophus:
+    type: git
+    url: https://github.com/stonier/sophus.git
+    version: release/1.2.x
