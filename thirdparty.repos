@@ -1,0 +1,25 @@
+repositories:
+  ThirdParty/kobuki_ros:
+    type: git
+    url: https://github.com/Juancams/kobuki_ros.git
+    version: humble-devel
+  ThirdParty/ecl/ecl_core:
+    type: git
+    url: https://github.com/stonier/ecl_core.git
+    version: devel
+  ThirdParty/ecl/ecl_lite:
+    type: git
+    url: https://github.com/stonier/ecl_lite.git
+    version: devel
+  ThirdParty/kobuki_core:
+    type: git
+    url: https://github.com/kobuki-base/kobuki_core.git
+    version: release/1.3.x
+  ThirdParty/ros_astra_camera:
+    type: git
+    url: https://github.com/Juancams/ros_astra_camera.git
+    version: ros2
+  ThirdParty/openni2_camera:
+    type: git
+    url: https://github.com/Juancams/openni2_camera.git
+    version: ros2
