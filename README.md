@@ -71,7 +71,7 @@ ros2 launch kobuki simulation.launch.py
 ```
 Or you can add the path of your world to the world parameter like this:
 ```bash
-ros2 launch kobuki simulation.launch.py world:=install/kobuki/share/kobuki/worlds/robocuplab.world
+ros2 launch kobuki simulation.launch.py world:=install/aws_robomaker_small_warehouse_world/share/aws_robomaker_small_warehouse_world/worlds/small_warehouse/small_warehouse.world
 ``` 
 
 If you have a low performance, close the Gazebo's client. Check gzclient process, and kill it:
@@ -98,8 +98,14 @@ ros2 launch kobuki kobuki.launch.py astra:=True
 You can use [Nav2] using robot with this launcher:
 
 ```bash
-ros2 launch kobuki navigation.launch.py
+ros2 launch kobuki navigation.launch.py map:=<path-to-map>
 ``` 
+
+or this other command if you need to navigate in the simulator
+```bash
+ros2 launch kobuki navigation_sim.launch.py
+```
+
 If you want to use another map, you have to put the route in the map parameter
 
 
