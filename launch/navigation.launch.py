@@ -15,6 +15,7 @@
 # Modified by Juan Carlos Manzanares Serrano
 
 import os
+
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
@@ -31,7 +32,7 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time')
     slam = LaunchConfiguration('slam')
     rviz = LaunchConfiguration('rviz')
-    map = LaunchConfiguration('map')
+    map_file = LaunchConfiguration('map')
     params_file = LaunchConfiguration('params_file')
 
     declare_use_sim_time_cmd = DeclareLaunchArgument(
@@ -61,7 +62,7 @@ def generate_launch_description():
         launch_arguments={
             'use_sim_time': use_sim_time,
             'slam': slam,
-            'map': map,
+            'map': map_file,
             'params_file': params_file
         }.items()
     )
