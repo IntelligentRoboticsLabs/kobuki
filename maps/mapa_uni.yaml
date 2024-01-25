@@ -1,0 +1,7 @@
+image: mapa_uni.pgm
+resolution: 0.020000
+origin: [-11.240000, -13.800000, 0.000000]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196
+

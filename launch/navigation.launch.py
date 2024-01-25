@@ -1,4 +1,4 @@
-# Copyright (c) 2023 José Miguel Guerrero Hernández
+# Copyright (c) 2024 Intelligent Robotics Lab (URJC)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,16 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-import yaml
+# Modified by Juan Carlos Manzanares Serrano
 
+import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch_pal.include_utils import include_launch_py_description
 from launch_ros.actions import SetRemap
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
-from launch_ros.actions import Node
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
@@ -30,44 +28,77 @@ def generate_launch_description():
     package_dir = get_package_share_directory('kobuki')
     nav2_dir = get_package_share_directory('nav2_bringup')
 
-    sim_time_arg = DeclareLaunchArgument(
-      'use_sim_time', default_value='True')
+    # Configuration Variables
+    use_sim_time = LaunchConfiguration('use_sim_time')
+    slam = LaunchConfiguration('slam')
+    rviz = LaunchConfiguration('rviz')
+    map = LaunchConfiguration('map')
+    params_file = LaunchConfiguration('params_file')
 
-    rviz_arg = DeclareLaunchArgument(
+    declare_use_sim_time_cmd = DeclareLaunchArgument(
+      'use_sim_time', default_value='false')
+    
+    declare_slam_cmd = DeclareLaunchArgument(
+        'slam', default_value='False')
+
+    declare_use_rviz_cmd = DeclareLaunchArgument(
       'rviz', default_value='True')
-    
-    map_arg = DeclareLaunchArgument(
-        'map', default_value=os.path.join(
-        package_dir,
-        'maps',
-        'GrannieAnnie.yaml')
-        )
-    
-    nav_params_arg = DeclareLaunchArgument(
-        'params', default_value=os.path.join(
+
+    declare_map_cmd = DeclareLaunchArgument(
+        'map', default_value='')
+
+    declare_nav_params_cmd = DeclareLaunchArgument(
+        'params_file', default_value=os.path.join(
         package_dir,
         'config',
         'kobuki_nav_params.yaml')
         )
 
-    nav2_cmd = IncludeLaunchDescription(
+    # Actions
+    localization_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(nav2_dir, 'launch', 'bringup_launch.py')
+            os.path.join(nav2_dir, 'launch', 'localization_launch.py')
         ),
         launch_arguments={
-            # 'use_sim_time': LaunchConfiguration('use_sim_time'),
-            # 'rviz': LaunchConfiguration('rviz'),
-            'map': LaunchConfiguration('map'),
-            # 'params': LaunchConfiguration('params')
+            'use_sim_time': use_sim_time,
+            'slam': slam,
+            'map': map,
+            'params_file': params_file
         }.items()
     )
 
-    # Create the launch description and populate
+    navigation_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(nav2_dir, 'launch', 'navigation_launch.py')
+        ),
+        launch_arguments={
+            'use_sim_time': use_sim_time,
+            'params_file': params_file
+        }.items()
+    )
+
+    rviz_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(nav2_dir, 'launch', 'rviz_launch.py')
+        ),
+        launch_arguments={
+            'use_sim_time': use_sim_time,
+            'rviz': rviz
+        }.items()
+    )
+
+    # Remappings
+    cmd_vel_remap = SetRemap(src='cmd_vel_nav', dst='cmd_vel')
+
     ld = LaunchDescription()
-    ld.add_action(nav_params_arg)
-    ld.add_action(rviz_arg)
-    ld.add_action(sim_time_arg)
-    ld.add_action(map_arg)
-    ld.add_action(nav2_cmd)
+    ld.add_action(declare_use_sim_time_cmd)
+    ld.add_action(declare_slam_cmd)
+    ld.add_action(declare_nav_params_cmd)
+    ld.add_action(declare_use_rviz_cmd)
+    ld.add_action(declare_map_cmd)
+    ld.add_action(localization_cmd)
+    ld.add_action(navigation_cmd)
+    ld.add_action(rviz_cmd)
+    ld.add_action(cmd_vel_remap)
 
     return ld
