@@ -16,15 +16,20 @@
 
 import os
 import yaml
-from ament_index_python.packages import (get_package_share_directory,
-                                         get_package_prefix)
+from ament_index_python.packages import (
+    get_package_share_directory,
+    get_package_prefix
+)
 from launch_ros.actions import Node
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, SetEnvironmentVariable
+from launch.actions import (
+    IncludeLaunchDescription,
+    SetEnvironmentVariable,
+    DeclareLaunchArgument
+)
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PythonExpression, PathJoinSubstitution, LaunchConfiguration
 from launch.conditions import IfCondition, UnlessCondition
-from launch.actions import DeclareLaunchArgument
 
 
 def get_model_paths(packages_names):
@@ -40,6 +45,7 @@ def get_model_paths(packages_names):
 
     return model_paths
 
+
 def generate_launch_description():
     package_dir = get_package_share_directory('kobuki')
 
@@ -53,36 +59,40 @@ def generate_launch_description():
 
     declare_xtion_cmd = DeclareLaunchArgument(
         'xtion', default_value='False')
-    
+
     declare_astra_cmd = DeclareLaunchArgument(
         'astra', default_value='False')
-    
+
     declare_lidar_cmd = DeclareLaunchArgument(
         'lidar', default_value='False')
 
     ld = LaunchDescription()
 
-    kobuki_cmd = Node(package='kobuki_node',
-                      executable='kobuki_ros_node',
-                      output='screen',
-                      parameters=[kobuki_params],
-                      remappings=[
-                        ('/commands/velocity', '/cmd_vel'),
-                      ])
-    
+    kobuki_cmd = Node(
+        package='kobuki_node',
+        executable='kobuki_ros_node',
+        output='screen',
+        parameters=[kobuki_params],
+        remappings=[
+            ('/commands/velocity', '/cmd_vel'),
+        ]
+    )
+
     ld.add_action(kobuki_cmd)
-    
+
     xtion_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory('openni2_camera'),
             'launch/'), 'camera_with_cloud.launch.py']),
-            condition=IfCondition(PythonExpression([xtion])))
+        condition=IfCondition(PythonExpression([xtion]))
+    )
 
     robot_xtion_description_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory('kobuki_description'),
             'launch/'), 'kobuki_xtion_description.launch.py']),
-            condition=IfCondition(PythonExpression([xtion])))
+        condition=IfCondition(PythonExpression([xtion]))
+    )
 
     ld.add_action(declare_xtion_cmd)
     ld.add_action(robot_xtion_description_cmd)
@@ -92,13 +102,15 @@ def generate_launch_description():
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory('astra_camera'),
             'launch/'), 'astra_mini.launch.py']),
-            condition=IfCondition(PythonExpression([astra])))
+        condition=IfCondition(PythonExpression([astra]))
+    )
 
     robot_astra_description_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory('kobuki_description'),
             'launch/'), 'kobuki_astra_description.launch.py']),
-            condition=IfCondition(PythonExpression([astra])))
+        condition=IfCondition(PythonExpression([astra]))
+    )
 
     ld.add_action(declare_astra_cmd)
     ld.add_action(robot_astra_description_cmd)
@@ -108,7 +120,8 @@ def generate_launch_description():
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory('kobuki_description'),
             'launch/'), 'kobuki_description.launch.py']),
-            condition=UnlessCondition(xtion and astra))
+        condition=UnlessCondition(xtion and astra)
+    )
 
     ld.add_action(robot_description_cmd)
 
@@ -124,7 +137,7 @@ def generate_launch_description():
             'inverted': True,
             'angle_compensate': True,
         }],
-        condition=IfCondition(PythonExpression([lidar])),
+        condition=IfCondition(PythonExpression([lidar]))
     )
 
     laser_filter_cmd = Node(
@@ -134,8 +147,9 @@ def generate_launch_description():
             PathJoinSubstitution([
                 package_dir,
                 "params", "footprint_filter.yaml",
-            ])],
-        condition=IfCondition(PythonExpression([lidar])),
+            ])
+        ],
+        condition=IfCondition(PythonExpression([lidar]))
     )
 
     ld.add_action(declare_lidar_cmd)
@@ -146,7 +160,11 @@ def generate_launch_description():
         package='tf2_ros',
         executable='static_transform_publisher',
         output='screen',
-        arguments=['0.0', '0.0', '0.001', '0.0', '0.0', '0.0', '1.0', 'base_link', 'base_footprint'],
+        arguments=[
+            '0.0', '0.0', '0.001',
+            '0.0', '0.0', '0.0',
+            '1.0', 'base_link', 'base_footprint'
+        ],
     )
 
     ld.add_action(tf_footprint2base_cmd)

@@ -36,23 +36,23 @@ def generate_launch_description():
     params_file = LaunchConfiguration('params_file')
 
     declare_use_sim_time_cmd = DeclareLaunchArgument(
-      'use_sim_time', default_value='false')
-    
+        'use_sim_time', default_value='false')
+
     declare_slam_cmd = DeclareLaunchArgument(
         'slam', default_value='False')
 
     declare_use_rviz_cmd = DeclareLaunchArgument(
-      'rviz', default_value='True')
+        'rviz', default_value='True')
 
     declare_map_cmd = DeclareLaunchArgument(
         'map', default_value='')
 
     declare_nav_params_cmd = DeclareLaunchArgument(
         'params_file', default_value=os.path.join(
-        package_dir,
-        'config',
-        'kobuki_nav_params.yaml')
-        )
+            package_dir,
+            'config',
+            'kobuki_nav_params.yaml')
+    )
 
     # Actions
     localization_cmd = IncludeLaunchDescription(

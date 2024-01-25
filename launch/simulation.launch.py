@@ -66,10 +66,10 @@ def generate_launch_description():
 
     declare_world_cmd = DeclareLaunchArgument(
         'world', default_value=os.path.join(
-        get_package_share_directory('aws_robomaker_small_house_world'),
-        'worlds',
-        'small_house.world'))
-    
+            get_package_share_directory('aws_robomaker_small_house_world'),
+            'worlds',
+            'small_house.world'))
+
     declare_x_cmd = DeclareLaunchArgument(
         'x', default_value='0.0'
     )
@@ -97,7 +97,7 @@ def generate_launch_description():
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory('gazebo_ros'),
-            'launch'), '/gazebo.launch.py']),
+            'launch', 'gazebo.launch.py')]),
     )
 
     kobuki_dir = get_package_share_directory('kobuki_description')
@@ -130,25 +130,25 @@ def generate_launch_description():
     )
 
     robot_entity_cmd = Node(package='gazebo_ros', executable='spawn_entity.py',
-                        arguments=['-topic', 'robot_description',
-                                   '-entity',
-                                   LaunchConfiguration('model_name'),
-                                   '-x', x,
-                                   '-y', y,
-                                   '-z', z,
-                                   '-R', roll,
-                                   '-P', pitch,
-                                   '-Y', yaw,
-                                   ],
-                        output='screen')
-    
+                            arguments=['-topic', 'robot_description',
+                                       '-entity',
+                                       LaunchConfiguration('model_name'),
+                                       '-x', x,
+                                       '-y', y,
+                                       '-z', z,
+                                       '-R', roll,
+                                       '-P', pitch,
+                                       '-Y', yaw,
+                                       ],
+                            output='screen')
+
     world_entity_cmd = Node(package='gazebo_ros', executable='spawn_entity.py',
-                        arguments=['-entity',
-                                   'world',
-                                   '-file',
-                                    world
-                                   ],
-                        output='screen')
+                            arguments=['-entity',
+                                       'world',
+                                       '-file',
+                                       world
+                                       ],
+                            output='screen')
 
     tf_footprint2base_cmd = Node(package='tf2_ros',
                                  executable='static_transform_publisher',
