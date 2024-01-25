@@ -24,6 +24,7 @@ from launch.actions import IncludeLaunchDescription, SetEnvironmentVariable
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PythonExpression, PathJoinSubstitution, LaunchConfiguration
 from launch.conditions import IfCondition, UnlessCondition
+from launch.actions import DeclareLaunchArgument
 
 
 def get_model_paths(packages_names):
@@ -46,9 +47,18 @@ def generate_launch_description():
     with open(params_file, 'r') as f:
         kobuki_params = yaml.safe_load(f)['kobuki_ros_node']['ros__parameters']
 
-    xtion_arg = LaunchConfiguration('xtion', default=False)
-    astra_arg = LaunchConfiguration('astra', default=False)
-    lidar_arg = LaunchConfiguration('lidar', default=False)
+    xtion = LaunchConfiguration('xtion')
+    astra = LaunchConfiguration('astra')
+    lidar = LaunchConfiguration('lidar')
+
+    declare_xtion_cmd = DeclareLaunchArgument(
+        'xtion', default_value='False')
+    
+    declare_astra_cmd = DeclareLaunchArgument(
+        'astra', default_value='False')
+    
+    declare_lidar_cmd = DeclareLaunchArgument(
+        'lidar', default_value='False')
 
     ld = LaunchDescription()
 
@@ -66,14 +76,15 @@ def generate_launch_description():
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory('openni2_camera'),
             'launch/'), 'camera_with_cloud.launch.py']),
-            condition=IfCondition(PythonExpression([xtion_arg])))
+            condition=IfCondition(PythonExpression([xtion])))
 
     robot_xtion_description_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory('kobuki_description'),
             'launch/'), 'kobuki_xtion_description.launch.py']),
-            condition=IfCondition(PythonExpression([xtion_arg])))
+            condition=IfCondition(PythonExpression([xtion])))
 
+    ld.add_action(declare_xtion_cmd)
     ld.add_action(robot_xtion_description_cmd)
     ld.add_action(xtion_cmd)
 
@@ -81,14 +92,15 @@ def generate_launch_description():
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory('astra_camera'),
             'launch/'), 'astra_mini.launch.py']),
-            condition=IfCondition(PythonExpression([astra_arg])))
+            condition=IfCondition(PythonExpression([astra])))
 
     robot_astra_description_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory('kobuki_description'),
             'launch/'), 'kobuki_astra_description.launch.py']),
-            condition=IfCondition(PythonExpression([astra_arg])))
+            condition=IfCondition(PythonExpression([astra])))
 
+    ld.add_action(declare_astra_cmd)
     ld.add_action(robot_astra_description_cmd)
     ld.add_action(astra_cmd)
 
@@ -96,7 +108,7 @@ def generate_launch_description():
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory('kobuki_description'),
             'launch/'), 'kobuki_description.launch.py']),
-            condition=UnlessCondition(xtion_arg and astra_arg))
+            condition=UnlessCondition(xtion and astra))
 
     ld.add_action(robot_description_cmd)
 
@@ -112,7 +124,7 @@ def generate_launch_description():
             'inverted': True,
             'angle_compensate': True,
         }],
-        condition=IfCondition(PythonExpression([lidar_arg])),
+        condition=IfCondition(PythonExpression([lidar])),
     )
 
     laser_filter_cmd = Node(
@@ -123,9 +135,10 @@ def generate_launch_description():
                 package_dir,
                 "params", "footprint_filter.yaml",
             ])],
-        condition=IfCondition(PythonExpression([lidar_arg])),
+        condition=IfCondition(PythonExpression([lidar])),
     )
 
+    ld.add_action(declare_lidar_cmd)
     ld.add_action(rplidar_cmd)
     ld.add_action(laser_filter_cmd)
 

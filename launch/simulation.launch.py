@@ -16,7 +16,6 @@
 
 import os
 from os import environ, pathsep
-import yaml
 
 from ament_index_python.packages import (get_package_share_directory,
                                          get_package_prefix)
@@ -57,11 +56,19 @@ def get_resource_paths(packages_names):
 
 def generate_launch_description():
 
+    world = LaunchConfiguration('world')
+    x = LaunchConfiguration('x')
+    y = LaunchConfiguration('y')
+    z = LaunchConfiguration('z')
+    roll = LaunchConfiguration('R')
+    pitch = LaunchConfiguration('P')
+    yaw = LaunchConfiguration('Y')
+
     declare_world_cmd = DeclareLaunchArgument(
         'world', default_value=os.path.join(
-        get_package_share_directory('kobuki'),
+        get_package_share_directory('aws_robomaker_small_house_world'),
         'worlds',
-        'GrannyAnnie.world'))
+        'small_house.world'))
     
     declare_x_cmd = DeclareLaunchArgument(
         'x', default_value='0.0'
@@ -122,24 +129,24 @@ def generate_launch_description():
         parameters=[{'use_sim_time': True}]
     )
 
-    robot_entity = Node(package='gazebo_ros', executable='spawn_entity.py',
+    robot_entity_cmd = Node(package='gazebo_ros', executable='spawn_entity.py',
                         arguments=['-topic', 'robot_description',
                                    '-entity',
                                    LaunchConfiguration('model_name'),
-                                   '-x', LaunchConfiguration('x'),
-                                   '-y', LaunchConfiguration('y'),
-                                   '-z', LaunchConfiguration('z'),
-                                   '-R', LaunchConfiguration('R'),
-                                   '-P', LaunchConfiguration('P'),
-                                   '-Y', LaunchConfiguration('Y'),
+                                   '-x', x,
+                                   '-y', y,
+                                   '-z', z,
+                                   '-R', roll,
+                                   '-P', pitch,
+                                   '-Y', yaw,
                                    ],
                         output='screen')
     
-    world_entity = Node(package='gazebo_ros', executable='spawn_entity.py',
+    world_entity_cmd = Node(package='gazebo_ros', executable='spawn_entity.py',
                         arguments=['-entity',
                                    'world',
                                    '-file',
-                                    LaunchConfiguration('world')
+                                    world
                                    ],
                         output='screen')
 
@@ -163,8 +170,8 @@ def generate_launch_description():
     ld.add_action(joint_state_publisher_node)
     ld.add_action(robot_model)
     ld.add_action(tf_footprint2base_cmd)
-    ld.add_action(robot_entity)
-    ld.add_action(world_entity)
+    ld.add_action(robot_entity_cmd)
+    ld.add_action(world_entity_cmd)
 
     packages = ['kobuki_description']
     model_path = get_model_paths(packages)
