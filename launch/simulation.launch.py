@@ -25,7 +25,8 @@ from launch.actions import (IncludeLaunchDescription, SetEnvironmentVariable,
                             DeclareLaunchArgument)
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
-from launch.substitutions import LaunchConfiguration
+import launch_ros.descriptions
+from launch.substitutions import LaunchConfiguration, Command
 
 
 def get_model_paths(packages_names):
@@ -102,10 +103,7 @@ def generate_launch_description():
 
     kobuki_dir = get_package_share_directory('kobuki_description')
 
-    urdf_file = os.path.join(kobuki_dir, 'urdf', 'kobuki_gazebo.urdf')
-
-    with open(urdf_file, 'r') as info:
-        robot_desc = info.read()
+    urdf_xacro_file = os.path.join(kobuki_dir, 'urdf', 'kobuki_hexagons_asus_xtion_pro.urdf.xacro')
 
     model_name = DeclareLaunchArgument(
         'model_name', default_value='robot',
@@ -116,10 +114,11 @@ def generate_launch_description():
     robot_model = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
-        parameters=[{'robot_description': robot_desc,
-                    'use_sim_time': True}],
-        arguments=[urdf_file]
-    )
+        parameters=[{
+            'robot_description': launch_ros.descriptions.ParameterValue(
+                Command(['xacro ', urdf_xacro_file]), value_type=str),
+            'use_sim_time': True
+        }])
 
     # TF Tree
     joint_state_publisher_node = Node(
