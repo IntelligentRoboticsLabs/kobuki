@@ -43,3 +43,8 @@ repositories:
     type: git
     url: https://github.com/Juancams/rplidar_ros.git
     version: ros2
+  ThirdParty/sophus:
+    type: git
+    url: https://github.com/stonier/sophus.git
+    version: release/1.2.x
+
