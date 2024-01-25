@@ -1,8 +1,20 @@
 repositories:
-  ThirdParty/kobuki_ros:
+  ThirdParty/aws-robomaker-bookstore-world:
     type: git
-    url: https://github.com/Juancams/kobuki_ros.git
-    version: humble-devel
+    url: https://github.com/aws-robotics/aws-robomaker-bookstore-world.git
+    version: ros2
+  ThirdParty/aws-robomaker-racetrack-world:
+    type: git
+    url: https://github.com/jmguerreroh/aws-robomaker-racetrack-world.git
+    version: ros2
+  ThirdParty/aws-robomaker-small-house-world:
+    type: git
+    url: https://github.com/aws-robotics/aws-robomaker-small-house-world.git
+    version: ros2
+  ThirdParty/aws-robomaker-small-warehouse-world:
+    type: git
+    url: https://github.com/aws-robotics/aws-robomaker-small-warehouse-world.git
+    version: ros2
   ThirdParty/ecl/ecl_core:
     type: git
     url: https://github.com/stonier/ecl_core.git
@@ -15,15 +27,19 @@ repositories:
     type: git
     url: https://github.com/kobuki-base/kobuki_core.git
     version: release/1.3.x
-  ThirdParty/ros_astra_camera:
+  ThirdParty/kobuki_ros:
     type: git
-    url: https://github.com/Juancams/ros_astra_camera.git
-    version: ros2
+    url: https://github.com/Juancams/kobuki_ros.git
+    version: humble-devel
   ThirdParty/openni2_camera:
     type: git
     url: https://github.com/Juancams/openni2_camera.git
     version: ros2
-  ThirdParty/rplidar_ros
+  ThirdParty/ros_astra_camera:
+    type: git
+    url: https://github.com/Juancams/ros_astra_camera.git
+    version: ros2
+  ThirdParty/rplidar_ros:
     type: git
     url: https://github.com/Juancams/rplidar_ros.git
     version: ros2
