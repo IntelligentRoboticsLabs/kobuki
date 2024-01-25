@@ -20,26 +20,26 @@ from ament_index_python.packages import (
     get_package_share_directory,
     get_package_prefix
 )
-from launch_ros.actions import Node
 from launch import LaunchDescription
 from launch.actions import (
+    DeclareLaunchArgument,
     IncludeLaunchDescription,
-    SetEnvironmentVariable,
-    DeclareLaunchArgument
+    SetEnvironmentVariable
 )
-from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import PythonExpression, PathJoinSubstitution, LaunchConfiguration
 from launch.conditions import IfCondition, UnlessCondition
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, PythonExpression
+from launch_ros.actions import Node
 
 
 def get_model_paths(packages_names):
-    model_paths = ""
+    model_paths = ''
     for package_name in packages_names:
-        if model_paths != "":
+        if model_paths != '':
             model_paths += os.pathsep
 
         package_path = get_package_prefix(package_name)
-        model_path = os.path.join(package_path, "share")
+        model_path = os.path.join(package_path, 'share')
 
         model_paths += model_path
 
@@ -141,12 +141,12 @@ def generate_launch_description():
     )
 
     laser_filter_cmd = Node(
-        package="laser_filters",
-        executable="scan_to_scan_filter_chain",
+        package='laser_filters',
+        executable='scan_to_scan_filter_chain',
         parameters=[
             PathJoinSubstitution([
                 package_dir,
-                "params", "footprint_filter.yaml",
+                'params', 'footprint_filter.yaml',
             ])
         ],
         condition=IfCondition(PythonExpression([lidar]))

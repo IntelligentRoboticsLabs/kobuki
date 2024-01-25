@@ -17,25 +17,28 @@
 import os
 from os import environ, pathsep
 
-from ament_index_python.packages import (get_package_share_directory,
-                                         get_package_prefix)
+from ament_index_python.packages import (get_package_prefix,
+                                         get_package_share_directory)
 
 from launch import LaunchDescription
-from launch.actions import (IncludeLaunchDescription, SetEnvironmentVariable,
-                            DeclareLaunchArgument)
+from launch.actions import (
+    DeclareLaunchArgument,
+    IncludeLaunchDescription,
+    SetEnvironmentVariable
+)
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch_ros.actions import Node
 from launch.substitutions import LaunchConfiguration
+from launch_ros.actions import Node
 
 
 def get_model_paths(packages_names):
-    model_paths = ""
+    model_paths = ''
     for package_name in packages_names:
-        if model_paths != "":
+        if model_paths != '':
             model_paths += pathsep
 
         package_path = get_package_prefix(package_name)
-        model_path = os.path.join(package_path, "share")
+        model_path = os.path.join(package_path, 'share')
 
         model_paths += model_path
 
@@ -43,9 +46,9 @@ def get_model_paths(packages_names):
 
 
 def get_resource_paths(packages_names):
-    resource_paths = ""
+    resource_paths = ''
     for package_name in packages_names:
-        if resource_paths != "":
+        if resource_paths != '':
             resource_paths += pathsep
 
         package_path = get_package_prefix(package_name)
