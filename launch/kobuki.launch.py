@@ -97,7 +97,7 @@ def generate_launch_description():
     robot_astra_description_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory('kobuki_description'),
-            'launch/'), 'kobuki_astra_description.launch.py']),
+            'launch/'), 'kobuki_description.launch.py']),
             condition=IfCondition(PythonExpression([astra])))
 
     ld.add_action(declare_astra_cmd)

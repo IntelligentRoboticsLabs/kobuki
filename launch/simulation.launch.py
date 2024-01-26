@@ -103,7 +103,7 @@ def generate_launch_description():
 
     kobuki_dir = get_package_share_directory('kobuki_description')
 
-    urdf_xacro_file = os.path.join(kobuki_dir, 'urdf', 'kobuki_hexagons_asus_xtion_pro.urdf.xacro')
+    urdf_xacro_file = os.path.join(kobuki_dir, 'urdf', 'kobuki_hexagons_asus_xtion_pro_sim.urdf.xacro')
 
     model_name = DeclareLaunchArgument(
         'model_name', default_value='robot',
