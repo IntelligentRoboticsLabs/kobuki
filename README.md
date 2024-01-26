@@ -37,7 +37,7 @@ When you connect a piece of hardware to your pc, it assigns `/dev/ttyUSB*` to it
 cd <ros2-workspace>
 sudo cp src/ThirdParty/ros_astra_camera/astra_camera/scripts/56-orbbec-usb.rules /etc/udev/rules.d/
 sudo cp src/ThirdParty/rplidar_ros/scripts/rplidar.rules /etc/udev/rules.d/
-sudo cp src/ThirdParty/kobuki_description/60-kobuki.rules /etc/udev/rules.d/
+sudo cp src/ThirdParty/kobuki_ros/60-kobuki.rules /etc/udev/rules.d/
 sudo udevadm control --reload-rules && sudo udevadm trigger
 ```
 
