@@ -17,26 +17,31 @@
 import os
 from os import environ, pathsep
 
-from ament_index_python.packages import (get_package_share_directory,
-                                         get_package_prefix)
+from ament_index_python.packages import (get_package_prefix,
+                                         get_package_share_directory)
 
 from launch import LaunchDescription
-from launch.actions import (IncludeLaunchDescription, SetEnvironmentVariable,
-                            DeclareLaunchArgument)
+from launch.actions import (
+    DeclareLaunchArgument,
+    IncludeLaunchDescription,
+    SetEnvironmentVariable
+)
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import LaunchConfiguration, Command
 from launch_ros.actions import Node
 import launch_ros.descriptions
-from launch.substitutions import LaunchConfiguration, Command
+from launch.substitutions import LaunchConfiguration
+from launch_ros.actions import Node
 
 
 def get_model_paths(packages_names):
-    model_paths = ""
+    model_paths = ''
     for package_name in packages_names:
-        if model_paths != "":
+        if model_paths != '':
             model_paths += pathsep
 
         package_path = get_package_prefix(package_name)
-        model_path = os.path.join(package_path, "share")
+        model_path = os.path.join(package_path, 'share')
 
         model_paths += model_path
 
@@ -44,9 +49,9 @@ def get_model_paths(packages_names):
 
 
 def get_resource_paths(packages_names):
-    resource_paths = ""
+    resource_paths = ''
     for package_name in packages_names:
-        if resource_paths != "":
+        if resource_paths != '':
             resource_paths += pathsep
 
         package_path = get_package_prefix(package_name)
@@ -67,10 +72,10 @@ def generate_launch_description():
 
     declare_world_cmd = DeclareLaunchArgument(
         'world', default_value=os.path.join(
-        get_package_share_directory('aws_robomaker_small_house_world'),
-        'worlds',
-        'small_house.world'))
-    
+            get_package_share_directory('aws_robomaker_small_house_world'),
+            'worlds',
+            'small_house.world'))
+
     declare_x_cmd = DeclareLaunchArgument(
         'x', default_value='0.0'
     )
@@ -98,7 +103,7 @@ def generate_launch_description():
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory('gazebo_ros'),
-            'launch'), '/gazebo.launch.py']),
+            'launch', 'gazebo.launch.py')]),
     )
 
     kobuki_dir = get_package_share_directory('kobuki_description')
@@ -129,25 +134,25 @@ def generate_launch_description():
     )
 
     robot_entity_cmd = Node(package='gazebo_ros', executable='spawn_entity.py',
-                        arguments=['-topic', 'robot_description',
-                                   '-entity',
-                                   LaunchConfiguration('model_name'),
-                                   '-x', x,
-                                   '-y', y,
-                                   '-z', z,
-                                   '-R', roll,
-                                   '-P', pitch,
-                                   '-Y', yaw,
-                                   ],
-                        output='screen')
-    
+                            arguments=['-topic', 'robot_description',
+                                       '-entity',
+                                       LaunchConfiguration('model_name'),
+                                       '-x', x,
+                                       '-y', y,
+                                       '-z', z,
+                                       '-R', roll,
+                                       '-P', pitch,
+                                       '-Y', yaw,
+                                       ],
+                            output='screen')
+
     world_entity_cmd = Node(package='gazebo_ros', executable='spawn_entity.py',
-                        arguments=['-entity',
-                                   'world',
-                                   '-file',
-                                    world
-                                   ],
-                        output='screen')
+                            arguments=['-entity',
+                                       'world',
+                                       '-file',
+                                       world
+                                       ],
+                            output='screen')
 
     tf_footprint2base_cmd = Node(package='tf2_ros',
                                  executable='static_transform_publisher',

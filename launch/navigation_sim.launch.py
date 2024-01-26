@@ -15,13 +15,13 @@
 # Modified by Juan Carlos Manzanares Serrano
 
 import os
+
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch_ros.actions import SetRemap
-from launch.actions import DeclareLaunchArgument
-from launch.substitutions import LaunchConfiguration
-from launch.actions import IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import LaunchConfiguration
+from launch_ros.actions import SetRemap
 
 
 def generate_launch_description():
@@ -32,31 +32,31 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time')
     slam = LaunchConfiguration('slam')
     rviz = LaunchConfiguration('rviz')
-    map = LaunchConfiguration('map')
+    map_file = LaunchConfiguration('map')
     params_file = LaunchConfiguration('params_file')
 
     declare_use_sim_time_cmd = DeclareLaunchArgument(
-      'use_sim_time', default_value='true')
-    
+        'use_sim_time', default_value='true')
+
     declare_slam_cmd = DeclareLaunchArgument(
         'slam', default_value='False')
 
     declare_use_rviz_cmd = DeclareLaunchArgument(
-      'rviz', default_value='True')
+        'rviz', default_value='True')
 
     declare_map_cmd = DeclareLaunchArgument(
         'map', default_value=os.path.join(
-        package_dir,
-        'maps',
-        'aws_house.yaml')
-        )
+            package_dir,
+            'maps',
+            'aws_house.yaml')
+    )
 
     declare_nav_params_cmd = DeclareLaunchArgument(
         'params_file', default_value=os.path.join(
-        package_dir,
-        'config',
-        'kobuki_sim_nav_params.yaml')
-        )
+            package_dir,
+            'config',
+            'kobuki_sim_nav_params.yaml')
+    )
 
     # Actions
     localization_cmd = IncludeLaunchDescription(
@@ -66,7 +66,7 @@ def generate_launch_description():
         launch_arguments={
             'use_sim_time': use_sim_time,
             'slam': slam,
-            'map': map,
+            'map': map_file,
             'params_file': params_file
         }.items()
     )
