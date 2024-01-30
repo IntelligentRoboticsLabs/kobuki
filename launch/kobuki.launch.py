@@ -57,6 +57,7 @@ def generate_launch_description():
     xtion = LaunchConfiguration('xtion')
     astra = LaunchConfiguration('astra')
     lidar = LaunchConfiguration('lidar')
+    lidar_s2 = LaunchConfiguration('lidar_s2')
 
     declare_xtion_cmd = DeclareLaunchArgument(
         'xtion', default_value='False')
@@ -66,6 +67,9 @@ def generate_launch_description():
 
     declare_lidar_cmd = DeclareLaunchArgument(
         'lidar', default_value='False')
+    
+    declare_lidar_s2_cmd = DeclareLaunchArgument(
+        'lidar_s2', default_value='False')
 
     ld = LaunchDescription()
 
@@ -88,15 +92,7 @@ def generate_launch_description():
         condition=IfCondition(PythonExpression([xtion]))
     )
 
-    robot_xtion_description_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory('kobuki_description'),
-            'launch/'), 'kobuki_xtion_description.launch.py']),
-        condition=IfCondition(PythonExpression([xtion]))
-    )
-
     ld.add_action(declare_xtion_cmd)
-    ld.add_action(robot_xtion_description_cmd)
     ld.add_action(xtion_cmd)
 
     astra_cmd = IncludeLaunchDescription(
@@ -106,15 +102,7 @@ def generate_launch_description():
         condition=IfCondition(PythonExpression([astra]))
     )
 
-    robot_astra_description_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory('kobuki_description'),
-            'launch/'), 'kobuki_description.launch.py']),
-            condition=IfCondition(PythonExpression([astra])))
-
-
     ld.add_action(declare_astra_cmd)
-    ld.add_action(robot_astra_description_cmd)
     ld.add_action(astra_cmd)
 
     robot_description_cmd = IncludeLaunchDescription(
@@ -133,12 +121,25 @@ def generate_launch_description():
         parameters=[{
             'serial_port': '/dev/rplidar',
             'serial_baudrate': 115200,  # A1 / A2
-            # 'serial_baudrate': 256000, # A3
             'frame_id': 'laser',
             'inverted': True,
             'angle_compensate': True,
         }],
         condition=IfCondition(PythonExpression([lidar]))
+    )
+
+    rplidar__s2_cmd = Node(
+        package='rplidar_ros',
+        executable='rplidar_composition',
+        output='screen',
+        parameters=[{
+            'serial_port': '/dev/rplidar',
+            'serial_baudrate': 1000000,  # S2
+            'frame_id': 'laser',
+            'inverted': True,
+            'angle_compensate': True,
+        }],
+        condition=IfCondition(PythonExpression([lidar_s2]))
     )
 
     laser_filter_cmd = Node(
@@ -155,6 +156,8 @@ def generate_launch_description():
 
     ld.add_action(declare_lidar_cmd)
     ld.add_action(rplidar_cmd)
+    ld.add_action(declare_lidar_s2_cmd)
+    ld.add_action(rplidar__s2_cmd)
     ld.add_action(laser_filter_cmd)
 
     tf_footprint2base_cmd = Node(
