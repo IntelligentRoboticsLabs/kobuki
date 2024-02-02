@@ -161,6 +161,8 @@ def generate_launch_description():
                                             '0.0', '0.0', '0.0',
                                             'base_link',
                                             'base_footprint'])
+    
+    fake_bumper_cmd = Node(package='kobuki', executable='fake_bumer_node', output='screen')
 
     ld = LaunchDescription()
     ld.add_action(declare_world_cmd)
@@ -176,6 +178,7 @@ def generate_launch_description():
     ld.add_action(tf_footprint2base_cmd)
     ld.add_action(robot_entity_cmd)
     ld.add_action(world_entity_cmd)
+    ld.add_action(fake_bumper_cmd)
 
     packages = ['kobuki_description']
     model_path = get_model_paths(packages)
