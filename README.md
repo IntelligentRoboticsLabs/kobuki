@@ -89,6 +89,7 @@ ros2 launch kobuki kobuki.launch.py
 If you want to use a lidar or camera, you have to set the following parameters to True:
 ```bash
 ros2 launch kobuki kobuki.launch.py lidar:=True
+ros2 launch kobuki kobuki.launch.py lidar_s2:=True
 ros2 launch kobuki kobuki.launch.py xtion:=True
 ros2 launch kobuki kobuki.launch.py astra:=True
 ``` 
