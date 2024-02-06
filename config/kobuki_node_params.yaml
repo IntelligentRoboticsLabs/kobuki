@@ -1,6 +1,6 @@
 kobuki_ros_node:
   ros__parameters:
-    acceleration_limiter: false
+    acceleration_limiter: true
     battery_capacity: 16.5
     battery_low: 14.0
     battery_dangerous: 13.2
