@@ -56,6 +56,10 @@ rosdep install --from-paths src --ignore-src -r -y
 colcon build --symlink-install 
 ```
 
+>  If your terminal has crashed or closed while compiling, please try compiling your packages as follows `colcon build --symlink-install --parallel-workers 1` or do so by selecting the package that failed `colcon build --symlink-install --parallel-workers 1 --packages-select <package>`
+> 
+> Also, if you want to prevent it from recompiling that package, add a `COLCON_IGNORE` inside the package
+
 ### Setup Gazebo to find models - GAZEBO_MODEL_PATH and project path
 ```bash
 source /usr/share/gazebo/setup.bash
