@@ -184,7 +184,31 @@ def generate_launch_description():
         ],
     )
 
+    tf_base2camera_cmd = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        output='screen',
+        arguments=[
+            '0.1', '0.0', '0.2',
+            '0.0', '0.0', '0.0',
+            '1.0', 'base_footprint', 'camera_link'
+        ],
+    )
+
+    tf_base2lidar_cmd = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        output='screen',
+        arguments=[
+            '0.0', '0.0', '0.4',
+            '0.0', '0.0', '0.0',
+            '1.0', 'base_footprint', 'laser'
+        ],
+    )
+
     ld.add_action(tf_footprint2base_cmd)
+    ld.add_action(tf_base2camera_cmd)
+    ld.add_action(tf_base2lidar_cmd)
 
     packages = ['kobuki_description']
     model_path = get_model_paths(packages)
