@@ -153,12 +153,7 @@ def generate_launch_description():
     laser_filter_s2_cmd = Node(
         package='laser_filters',
         executable='scan_to_scan_filter_chain',
-        parameters=[
-            PathJoinSubstitution([
-                package_dir,
-                'params', 'footprint_filter.yaml',
-            ])
-        ],
+        parameters=[params_file_filter],
         condition=IfCondition(PythonExpression([lidar_s2]))
     )
 
