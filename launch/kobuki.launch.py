@@ -160,9 +160,9 @@ def generate_launch_description():
     ld.add_action(declare_lidar_cmd)
     ld.add_action(rplidar_cmd)
     ld.add_action(declare_lidar_s2_cmd)
-    # ld.add_action(rplidar__s2_cmd)
+    ld.add_action(rplidar__s2_cmd)
     ld.add_action(laser_filter_cmd)
-    # ld.add_action(laser_filter_s2_cmd)
+    ld.add_action(laser_filter_s2_cmd)
 
     tf_footprint2base_cmd = Node(
         package='tf2_ros',
