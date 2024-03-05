@@ -51,6 +51,7 @@ def generate_launch_description():
     package_dir = get_package_share_directory('kobuki')
 
     params_file = os.path.join(package_dir, 'config', 'kobuki_node_params.yaml')
+    params_file_filter = os.path.join(package_dir, 'config', 'footprint_filter.yaml')
     with open(params_file, 'r') as f:
         kobuki_params = yaml.safe_load(f)['kobuki_ros_node']['ros__parameters']
 
@@ -145,33 +146,23 @@ def generate_launch_description():
     laser_filter_cmd = Node(
         package='laser_filters',
         executable='scan_to_scan_filter_chain',
-        parameters=[
-            PathJoinSubstitution([
-                package_dir,
-                'params', 'footprint_filter.yaml',
-            ])
-        ],
+        parameters=[params_file_filter],
         condition=IfCondition(PythonExpression([lidar]))
     )
 
     laser_filter_s2_cmd = Node(
         package='laser_filters',
         executable='scan_to_scan_filter_chain',
-        parameters=[
-            PathJoinSubstitution([
-                package_dir,
-                'params', 'footprint_filter.yaml',
-            ])
-        ],
+        parameters=[params_file_filter],
         condition=IfCondition(PythonExpression([lidar_s2]))
     )
 
     ld.add_action(declare_lidar_cmd)
     ld.add_action(rplidar_cmd)
     ld.add_action(declare_lidar_s2_cmd)
-    ld.add_action(rplidar__s2_cmd)
+    # ld.add_action(rplidar__s2_cmd)
     ld.add_action(laser_filter_cmd)
-    ld.add_action(laser_filter_s2_cmd)
+    # ld.add_action(laser_filter_s2_cmd)
 
     tf_footprint2base_cmd = Node(
         package='tf2_ros',
