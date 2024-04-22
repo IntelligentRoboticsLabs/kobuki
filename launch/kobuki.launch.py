@@ -133,6 +133,7 @@ def generate_launch_description():
         package='rplidar_ros',
         executable='rplidar_composition',
         output='screen',
+        namespace=ns,
         parameters=[{
             'serial_port': '/dev/rplidar',
             'serial_baudrate': 115200,  # A1 / A2
@@ -148,6 +149,7 @@ def generate_launch_description():
         package='rplidar_ros',
         executable='rplidar_composition',
         output='screen',
+        namespace=ns,
         parameters=[{
             'serial_port': '/dev/rplidar',
             'serial_baudrate': 1000000,  # S2
