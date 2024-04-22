@@ -51,7 +51,7 @@ def generate_launch_description():
     package_dir = get_package_share_directory('kobuki')
 
     params_file = os.path.join(package_dir, 'config', 'kobuki_node_params.yaml')
-    params_file_filter = os.path.join(package_dir, 'config', 'footprint_filter.yaml')
+    filter_file = os.path.join(package_dir, 'config', 'footprint_filter.yaml')
     with open(params_file, 'r') as f:
         kobuki_params = yaml.safe_load(f)['kobuki_ros_node']['ros__parameters']
 
@@ -59,6 +59,7 @@ def generate_launch_description():
     astra = LaunchConfiguration('astra')
     lidar = LaunchConfiguration('lidar')
     lidar_s2 = LaunchConfiguration('lidar_s2')
+    ns = LaunchConfiguration('namespace')
 
     declare_xtion_cmd = DeclareLaunchArgument(
         'xtion', default_value='False')
@@ -71,16 +72,20 @@ def generate_launch_description():
     
     declare_lidar_s2_cmd = DeclareLaunchArgument(
         'lidar_s2', default_value='False')
+    
+    declase_namespace_cmd = DeclareLaunchArgument(
+        'namespace', default_value='')
 
     ld = LaunchDescription()
 
     kobuki_cmd = Node(
         package='kobuki_node',
         executable='kobuki_ros_node',
+        namespace=ns,
         output='screen',
         parameters=[kobuki_params],
         remappings=[
-            ('/commands/velocity', '/cmd_vel'),
+            ('/commands/velocity', '/cmd_vel'), ('/tf', 'tf'), ('/tf_static', 'tf_static')
         ]
     )
 
@@ -100,6 +105,9 @@ def generate_launch_description():
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory('astra_camera'),
             'launch/'), 'astra_mini.launch.py']),
+        launch_arguments={
+                    'namespace': ns,
+                }.items(),
         condition=IfCondition(PythonExpression([astra]))
     )
 
@@ -110,6 +118,9 @@ def generate_launch_description():
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory('kobuki_description'),
             'launch/'), 'kobuki_description.launch.py']),
+        launch_arguments={
+                    'namespace': ns,
+                }.items(),
         condition=UnlessCondition(xtion and astra)
     )
 
@@ -124,6 +135,7 @@ def generate_launch_description():
             'serial_baudrate': 115200,  # A1 / A2
             'frame_id': 'laser',
             'inverted': True,
+            'namespace': ns,
             'angle_compensate': True,
         }],
         condition=IfCondition(PythonExpression([lidar]))
@@ -138,6 +150,7 @@ def generate_launch_description():
             'serial_baudrate': 1000000,  # S2
             'frame_id': 'laser',
             'inverted': True,
+            'namespace': ns,
             'angle_compensate': True,
         }],
         condition=IfCondition(PythonExpression([lidar_s2]))
@@ -146,14 +159,16 @@ def generate_launch_description():
     laser_filter_cmd = Node(
         package='laser_filters',
         executable='scan_to_scan_filter_chain',
-        parameters=[params_file_filter],
+        namespace=ns,
+        parameters=[filter_file],
         condition=IfCondition(PythonExpression([lidar]))
     )
 
     laser_filter_s2_cmd = Node(
         package='laser_filters',
         executable='scan_to_scan_filter_chain',
-        parameters=[params_file_filter],
+        namespace=ns,
+        parameters=[filter_file],
         condition=IfCondition(PythonExpression([lidar_s2]))
     )
 
@@ -167,7 +182,11 @@ def generate_launch_description():
     tf_footprint2base_cmd = Node(
         package='tf2_ros',
         executable='static_transform_publisher',
+        namespace=ns,
         output='screen',
+        remappings=[
+            ('/tf', 'tf'), ('/tf_static', 'tf_static')
+        ],
         arguments=[
             '0.0', '0.0', '0.001',
             '0.0', '0.0', '0.0',
@@ -178,7 +197,11 @@ def generate_launch_description():
     tf_base2camera_cmd = Node(
         package='tf2_ros',
         executable='static_transform_publisher',
+        namespace=ns,
         output='screen',
+        remappings=[
+            ('/tf', 'tf'), ('/tf_static', 'tf_static')
+        ],
         arguments=[
             '0.1', '0.0', '0.2',
             '0.0', '0.0', '0.0',
@@ -189,7 +212,11 @@ def generate_launch_description():
     tf_base2lidar_cmd = Node(
         package='tf2_ros',
         executable='static_transform_publisher',
+        namespace=ns,
         output='screen',
+        remappings=[
+            ('/tf', 'tf'), ('/tf_static', 'tf_static')
+        ],
         arguments=[
             '0.0', '0.0', '0.4',
             '0.0', '0.0', '0.0',
