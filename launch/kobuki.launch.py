@@ -95,6 +95,9 @@ def generate_launch_description():
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory('openni2_camera'),
             'launch/'), 'camera_with_cloud.launch.py']),
+        launch_arguments={
+                    'namespace': ns,
+                }.items(),
         condition=IfCondition(PythonExpression([xtion]))
     )
 
