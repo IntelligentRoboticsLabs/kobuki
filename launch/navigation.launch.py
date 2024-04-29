@@ -90,7 +90,7 @@ def generate_launch_description():
         ),
         launch_arguments={
             'use_sim_time': use_sim_time,
-            'rviz': rviz,
+            'rviz': rviz
             'namespace': namespace
         }.items()
     )
@@ -104,9 +104,9 @@ def generate_launch_description():
     ld.add_action(declare_nav_params_cmd)
     ld.add_action(declare_use_rviz_cmd)
     ld.add_action(declare_map_cmd)
+    ld.add_action(declare_namespace_cmd)
     ld.add_action(localization_cmd)
     ld.add_action(navigation_cmd)
-    ld.add_action(declare_namespace_cmd)
     ld.add_action(rviz_cmd)
     ld.add_action(cmd_vel_remap)
 
