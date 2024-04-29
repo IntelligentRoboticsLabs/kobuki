@@ -34,6 +34,7 @@ def generate_launch_description():
     rviz = LaunchConfiguration('rviz')
     map_file = LaunchConfiguration('map')
     params_file = LaunchConfiguration('params_file')
+    namespace = LaunchConfiguration('namespace')
 
     declare_use_sim_time_cmd = DeclareLaunchArgument(
         'use_sim_time', default_value='false')
@@ -54,6 +55,10 @@ def generate_launch_description():
             'kobuki_nav_params.yaml')
     )
 
+    declare_namespace_cmd = DeclareLaunchArgument(
+        'namespace', default_value=''
+    )
+
     # Actions
     localization_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -63,7 +68,8 @@ def generate_launch_description():
             'use_sim_time': use_sim_time,
             'slam': slam,
             'map': map_file,
-            'params_file': params_file
+            'params_file': params_file,
+            'namespace': namespace
         }.items()
     )
 
@@ -73,7 +79,8 @@ def generate_launch_description():
         ),
         launch_arguments={
             'use_sim_time': use_sim_time,
-            'params_file': params_file
+            'params_file': params_file,
+            'namespace': namespace
         }.items()
     )
 
@@ -83,7 +90,8 @@ def generate_launch_description():
         ),
         launch_arguments={
             'use_sim_time': use_sim_time,
-            'rviz': rviz
+            'rviz': rviz,
+            'namespace': namespace
         }.items()
     )
 
@@ -98,6 +106,7 @@ def generate_launch_description():
     ld.add_action(declare_map_cmd)
     ld.add_action(localization_cmd)
     ld.add_action(navigation_cmd)
+    ld.add_action(declare_namespace_cmd)
     ld.add_action(rviz_cmd)
     ld.add_action(cmd_vel_remap)
 
