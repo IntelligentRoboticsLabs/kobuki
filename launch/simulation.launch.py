@@ -64,7 +64,7 @@ def generate_launch_description():
 
     spawn_robot = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory('kobuki'),
+            get_package_share_directory('kobuki_description'),
             'launch/'), 'spawn.launch.py']),
     )
 
