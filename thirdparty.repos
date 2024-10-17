@@ -31,3 +31,11 @@ repositories:
     type: git
     url: https://github.com/Juancams/kobuki_ros.git
     version: jazzy-devel
+  ThirdParty/openni2_camera:
+    type: git
+    url: https://github.com/ros-drivers/openni2_camera.git
+    version: ros2
+  ThirdParty/rplidar_ros:
+    type: git
+    url: https://github.com/Juancams/rplidar_ros.git
+    version: ros2
