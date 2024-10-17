@@ -1,9 +1,18 @@
-# Kobuki from the Intelligent Robotics Lab using ROS 2
+# Kobuki from Intelligent Robotics Lab using ROS 2
 
-![distro](https://img.shields.io/badge/Ubuntu%2022-Jammy%20Jellyfish-green)
-![distro](https://img.shields.io/badge/ROS2-Humble-blue)
+![distro](https://img.shields.io/badge/Ubuntu%2024-Noble%20Numbat-orange)
+![distro](https://img.shields.io/badge/ROS2-Jazzy-blue)
+[![jazzy-devel](https://github.com/IntelligentRoboticsLabs/kobuki/actions/workflows/jazzy-devel.yaml/badge.svg?branch=jazzy-devel)](https://github.com/IntelligentRoboticsLabs/kobuki/actions/workflows/jazzy-devel.yaml)
 
 This project contains the launchers to run the [Turtlebot2 Kobuki](https://github.com/kobuki-base), both in simulated running different Gazebo worlds, as in the real robot using its drivers.
+
+- [Installation on your own computer](#installation-on-your-own-computer)  
+- [Run the robot in ROS 2](#run-the-robot-in-ros-2)  
+   - [Run Gazebo](#run-gazebo)  
+   - [Run a real kobuki](#run-a-real-kobuki)
+- [Run Navigation in ROS 2](#run-navigation-in-ros-2)
+- [About](#about)  
+
 
 # Installation on your own computer
 You need to have previously installed ROS2. Please follow this [guide](https://docs.ros.org/en/jazzy/Installation.html) if you don't have it.
@@ -72,7 +81,7 @@ ros2 launch kobuki kobuki.launch.py
 
 If you want to use a lidar or camera, you have to set the following parameters to true:
 ```bash
-ros2 launch kobuki kobuki.launch.py lidar:=true
+ros2 launch kobuki kobuki.launch.py lidar_a2:=true
 ros2 launch kobuki kobuki.launch.py lidar_s2:=true
 ros2 launch kobuki kobuki.launch.py xtion:=true
 ros2 launch kobuki kobuki.launch.py astra:=true
@@ -80,7 +89,7 @@ ros2 launch kobuki kobuki.launch.py astra:=true
 
 # Run Navigation in ROS 2
 
-You can use [Nav2] using robot with this launcher:
+You can use [Nav2](https://navigation.ros.org/) using robot with this launcher:
 
 ```bash
 ros2 launch kobuki navigation.launch.py map:=<path-to-map>
@@ -96,20 +105,9 @@ If you want to use another map, you have to put the route in the map parameter
 
 # About
 
-This is a project made by the [Intelligent Robotics Lab], a research group from the [Universidad Rey Juan Carlos].
+This is a project made by the [Intelligent Robotics Lab](https://intelligentroboticslab.gsyc.urjc.es/), a research group from the [Universidad Rey Juan Carlos](https://www.urjc.es/).
 Copyright &copy; 2024.
 
 Maintainers:
 
-* [Juan Carlos Manzanares]
-
-
-[Universidad Rey Juan Carlos]: https://www.urjc.es/
-[Intelligent Robotics Lab]: https://intelligentroboticslab.gsyc.urjc.es/
-[José Miguel Guerrero]: https://sites.google.com/view/jmguerrero
-[Juan Carlos Manzanares]: https://github.com/Juancams
-[Francisco Martín]: https://github.com/fmrico
-[Nav2]: https://navigation.ros.org/
-[Keepout Zones]: https://navigation.ros.org/tutorials/docs/navigation2_with_keepout_filter.html?highlight=keep
-[SLAM Toolbox]: https://vimeo.com/378682207
-[Navigate While Mapping]: https://navigation.ros.org/tutorials/docs/navigation2_with_slam.html
+* [Juan Carlos Manzanares](https://github.com/Juancams)
