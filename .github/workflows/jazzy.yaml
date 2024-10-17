@@ -1,0 +1,37 @@
+name: jazzy
+
+on:
+  pull_request:
+    branches:
+      - jazzy
+  push:
+    branches:
+      - jazzy
+
+jobs:
+  build-and-test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-24.04]
+      fail-fast: false
+    steps:
+      - name: Repo checkout
+        uses: actions/checkout@v2
+      - name: Setup ROS 2
+        uses: ros-tooling/setup-ros@0.7.5
+        with:
+          required-ros-distributions: jazzy
+      - name: build and test
+        uses: ros-tooling/action-ros-ci@0.3.13
+        with:
+          package-name: kobuki
+          target-ros2-distro: jazzy
+          vcs-repo-file-url: ${GITHUB_WORKSPACE}/thirdparty.repos
+          skip-test: true
+          colcon-defaults: |
+            {
+              "build": {
+                "packages-up-to": true
+              }
+            }
