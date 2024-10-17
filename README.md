@@ -6,9 +6,9 @@
 This project contains the launchers to run the [Turtlebot2 Kobuki](https://github.com/kobuki-base), both in simulated running different Gazebo worlds, as in the real robot using its drivers.
 
 # Installation on your own computer
-You need to have previously installed ROS2. Please follow this [guide](https://docs.ros.org/en/humble/Installation.html) if you don't have it.
+You need to have previously installed ROS2. Please follow this [guide](https://docs.ros.org/en/jazzy/Installation.html) if you don't have it.
 ```bash
-source /opt/ros/humble/setup.bash
+source /opt/ros/jazzy/setup.bash
 ```
 
 Clone the repository to your workspace:
@@ -19,8 +19,7 @@ git clone https://github.com/IntelligentRoboticsLabs/kobuki.git
 
 Prepare your thirparty repos:
 ```bash
-sudo apt update
-sudo apt install python3-vcstool python3-pip python3-rosdep python3-colcon-common-extensions -y
+sudo apt update && sudo apt install ros-dev-tools -y
 cd <ros2-workspace>/src/
 vcs import < kobuki/thirdparty.repos
 ```
@@ -41,13 +40,6 @@ sudo cp src/ThirdParty/kobuki_ros/60-kobuki.rules /etc/udev/rules.d/
 sudo udevadm control --reload-rules && sudo udevadm trigger
 ```
 
-### Move xtion calibration
-Some cameras need a calibration file where they indicate, for example, their resolution, name, etc...
-```bash
-mkdir -p ~/.ros/camera_info
-cp <ros2-workspace>/src/ThirdParty/openni2_camera/openni2_camera/rgb_PS1080_PrimeSense.yaml ~/.ros/camera_info
-```
-
 ### Building project
 ```bash
 sudo rosdep init
@@ -60,13 +52,6 @@ colcon build --symlink-install
 > 
 > Also, if you want to prevent it from recompiling that package, add a `COLCON_IGNORE` inside the package
 
-### Setup Gazebo to find models - GAZEBO_MODEL_PATH and project path
-```bash
-source /usr/share/gazebo/setup.bash
-source <ros2-workspace>/install/setup.bash
-```
-*It is recommended to add these two lines inside your `.bashrc` to avoid having to run it every time you open a new shell*
-
 # Run the robot in ROS 2
 ## Run Gazebo
 You can launch the simulator as follows:
@@ -78,11 +63,6 @@ Or you can add the path of your world to the world parameter like this:
 ros2 launch kobuki simulation.launch.py world:=install/aws_robomaker_small_warehouse_world/share/aws_robomaker_small_warehouse_world/worlds/small_warehouse/small_warehouse.world
 ``` 
 
-If you have a low performance, close the Gazebo's client. Check gzclient process, and kill it:
-```bash
-kill -9 `pgrep -f gzclient`
-``` 
-
 ## Run a real kobuki
 Run the kobuki drivers:
 
@@ -90,12 +70,12 @@ Run the kobuki drivers:
 ros2 launch kobuki kobuki.launch.py
 ``` 
 
-If you want to use a lidar or camera, you have to set the following parameters to True:
+If you want to use a lidar or camera, you have to set the following parameters to true:
 ```bash
-ros2 launch kobuki kobuki.launch.py lidar:=True
-ros2 launch kobuki kobuki.launch.py lidar_s2:=True
-ros2 launch kobuki kobuki.launch.py xtion:=True
-ros2 launch kobuki kobuki.launch.py astra:=True
+ros2 launch kobuki kobuki.launch.py lidar:=true
+ros2 launch kobuki kobuki.launch.py lidar_s2:=true
+ros2 launch kobuki kobuki.launch.py xtion:=true
+ros2 launch kobuki kobuki.launch.py astra:=true
 ``` 
 
 # Run Navigation in ROS 2
