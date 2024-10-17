@@ -15,7 +15,6 @@
 # Modified by Juan Carlos Manzanares Serrano
 
 import os
-from os import environ, pathsep
 
 from ament_index_python.packages import get_package_share_directory
 

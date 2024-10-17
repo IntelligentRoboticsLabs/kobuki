@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef KOBUKI__FAKE_BUMPER_HPP_
-#define KOBUKI__FAKE_BUMPER_HPP_
+#ifndef KOBUKI__FAKEBUMPER_HPP_
+#define KOBUKI__FAKEBUMPER_HPP_
 
 #include <utility>
 
@@ -47,4 +47,4 @@ private:
 
 }  // namespace kobuki
 
-#endif  // KOBUKI__FAKE_BUMPER_HPP_
+#endif  // KOBUKI__FAKEBUMPER_HPP_

@@ -32,12 +32,14 @@ import yaml
 def start_description(context):
 
     description = []
-    
-    if LaunchConfiguration('xtion').perform(context) == 'true' or LaunchConfiguration('astra').perform(context) == 'true':
+
+    if (LaunchConfiguration('xtion').perform(context) == 'true' or
+            LaunchConfiguration('astra').perform(context) == 'true'):
         camera = DeclareLaunchArgument('camera', default_value='true')
         description.append(camera)
 
-    if LaunchConfiguration('lidar_a2').perform(context) == 'true' or LaunchConfiguration('lidar_s2').perform(context) == 'true':
+    if (LaunchConfiguration('lidar_a2').perform(context) == 'true' or
+            LaunchConfiguration('lidar_s2').perform(context) == 'true'):
         lidar = DeclareLaunchArgument('lidar', default_value='true')
         description.append(lidar)
 
@@ -49,11 +51,12 @@ def start_description(context):
 
     return description + [robot_description]
 
+
 def start_lidar(context):
 
     package_dir = get_package_share_directory('kobuki')
     filter_file = os.path.join(package_dir, 'config', 'footprint_filter.yaml')
-        
+
     if LaunchConfiguration('lidar_a2').perform(context) == 'true':
         rplidar_cmd = Node(
             package='rplidar_ros',
@@ -106,6 +109,7 @@ def start_lidar(context):
 
     return []
 
+
 def start_camera(context):
 
     if LaunchConfiguration('xtion').perform(context) == 'true':
@@ -128,9 +132,10 @@ def start_camera(context):
 
     return []
 
-def generate_launch_description():
-    package_dir = get_package_share_directory('kobuki')
 
+def generate_launch_description():
+
+    package_dir = get_package_share_directory('kobuki')
     params_file = os.path.join(package_dir, 'config', 'kobuki_node_params.yaml')
 
     with open(params_file, 'r') as f:
@@ -144,10 +149,10 @@ def generate_launch_description():
 
     declare_lidar_cmd = DeclareLaunchArgument(
         'lidar_a2', default_value='false')
-    
+
     declare_lidar_s2_cmd = DeclareLaunchArgument(
         'lidar_s2', default_value='false')
-    
+
     declare_namespace_cmd = DeclareLaunchArgument(
         'namespace', default_value='')
 

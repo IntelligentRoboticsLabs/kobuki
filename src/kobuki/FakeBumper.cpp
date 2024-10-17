@@ -32,7 +32,6 @@ void
 FakeBumper::laserCallback(const LaserScan::UniquePtr msg)
 {
   if (pressed_.state) {
-
     for (size_t i = 0; i < msg->ranges.size(); i++) {
       if (msg->ranges[i] < OBSTACLE_DISTANCE) {
         return;
