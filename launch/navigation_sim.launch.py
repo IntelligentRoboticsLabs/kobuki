@@ -59,24 +59,14 @@ def generate_launch_description():
     )
 
     # Actions
-    localization_cmd = IncludeLaunchDescription(
+    navigation_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(nav2_dir, 'launch', 'localization_launch.py')
+            os.path.join(nav2_dir, 'launch', 'bringup_launch.py')
         ),
         launch_arguments={
             'use_sim_time': use_sim_time,
             'slam': slam,
             'map': map_file,
-            'params_file': params_file
-        }.items()
-    )
-
-    navigation_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(nav2_dir, 'launch', 'navigation_launch.py')
-        ),
-        launch_arguments={
-            'use_sim_time': use_sim_time,
             'params_file': params_file
         }.items()
     )
@@ -100,7 +90,6 @@ def generate_launch_description():
     ld.add_action(declare_nav_params_cmd)
     ld.add_action(declare_use_rviz_cmd)
     ld.add_action(declare_map_cmd)
-    ld.add_action(localization_cmd)
     ld.add_action(navigation_cmd)
     ld.add_action(rviz_cmd)
     ld.add_action(cmd_vel_remap)
