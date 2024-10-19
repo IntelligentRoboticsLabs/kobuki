@@ -37,7 +37,7 @@ amcl:
     z_rand: 0.5
     z_short: 0.05
     scan_topic: /scan_raw
-    set_initial_pose: false
+    set_initial_pose: true
     initial_pose:
       x: 0.0
       y: 0.0
@@ -117,7 +117,7 @@ collision_monitor:
     state_topic: "collision_monitor_state"
     transform_tolerance: 0.2
     source_timeout: 1.0
-    base_shift_correction: True
+    base_shift_correction: False
     stop_pub_timeout: 2.0
     # Polygons represent zone around the robot for "stop", "slowdown" and "limit" action types,
     # and robot footprint for "approach" action type.
@@ -130,19 +130,19 @@ collision_monitor:
       simulation_time_step: 0.1
       min_points: 6
       visualize: False
-      enabled: True
+      enabled: False
     observation_sources: ["scan"]
     scan:
       type: "scan"
       topic: "/scan_raw"
       min_height: 0.15
       max_height: 2.0
-      enabled: True
+      enabled: False
 
 controller_server:
   ros__parameters:
     use_sim_time: true
-    controller_frequency: 20.0
+    controller_frequency: 30.0
     min_x_velocity_threshold: 0.001
     min_y_velocity_threshold: 0.5
     min_theta_velocity_threshold: 0.001
@@ -170,11 +170,11 @@ controller_server:
       debug_trajectory_details: True
       min_vel_x: 0.0
       min_vel_y: 0.0
-      max_vel_x: 1.00
+      max_vel_x: 0.30
       max_vel_y: 0.0
-      max_vel_theta: 5.00
+      max_vel_theta: 1.00
       min_speed_xy: 0.0
-      max_speed_xy: 1.00
+      max_speed_xy: 0.30
       min_speed_theta: 0.0
       acc_lim_x: 2.5
       acc_lim_y: 0.0
