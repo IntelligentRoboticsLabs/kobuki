@@ -22,6 +22,7 @@
   <exec_depend>aws_robomaker_bookstore_world</exec_depend>
   <exec_depend>ecl_core</exec_depend>
   <exec_depend>ecl_lite</exec_depend>
+  <exec_depend>nav2_bringup</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
