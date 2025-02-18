@@ -56,7 +56,7 @@ The `navigation_multirobot.launch.py` file accepts several launch arguments to c
 
 
 ### About the multi-robot templated configuration files
-In order to properly set the parameters for the nav2 nodes and rviz, the multi-robot launch system takes the templated YAML files [nav2_multirobot_params_template.yaml](../../config/multirobot/nav2_multirobot_params_template.yaml) and [nav2_namespaced_view.yaml](../../rviz/nav2_namespaced_view.yaml). These YAML files are automatically modified by the launch system to replace the `<robot_namespace>` tags for the corresponding value for each robot. If you want to create your own configuration, please follow the same format (More info in the [launch file](navigation_multirobot.launch.py#L89)).
+In order to properly set the parameters for the nav2 nodes and rviz, the multi-robot launch system takes the templated configuration files [nav2_multirobot_params_template.yaml](../../config/multirobot/nav2_multirobot_params_template.yaml) and [nav2_namespaced_view.rviz](../../rviz/nav2_namespaced_view.rviz). These configuration files are automatically modified by the launch system to replace the `<robot_namespace>` tags for the corresponding value for each robot. If you want to create your own configuration, please follow the same format (More info in the [launch file](navigation_multirobot.launch.py#L89)).
 
 
 

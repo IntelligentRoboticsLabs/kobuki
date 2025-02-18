@@ -86,10 +86,10 @@ def launch_nodes(context):
     # Condition to check if a namespace is used
     is_empty_namespace = EqualsSubstitution(LaunchConfiguration('namespace'), '')
 
-    # Only it applys when `use_namespace` is True.
-    # '<robot_namespace>' keyword shall be replaced by 'namespace' launch argument
-    # in config file 'nav2_multirobot_params_template.yaml' as a default & example.
-    # User defined config file should contain '<robot_namespace>' keyword for the replacements.
+    # Only applies when `use_namespace` is True.
+    # '<robot_namespace>' keyword shall be replaced by 'namespace' launch argument.
+    # Config file 'nav2_multirobot_params_template.yaml' serves as a default & example.
+    # User-defined config file should contain '<robot_namespace>' keyword for the replacements.
     # Notes:
     #   If a namespace is used, a trailing '/' is added to the namespace.
     #   If a namespace is not used (left empty), the tag <robot_namespace> is removed.
