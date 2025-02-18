@@ -24,7 +24,7 @@ FakeBumper::FakeBumper()
   bumper_pub_ =
     this->create_publisher<BumperEvent>("/events/bumper", 10);
   scan_sub_ = create_subscription<LaserScan>(
-    "/scan", rclcpp::SensorDataQoS(),
+    "/scan_raw", rclcpp::SensorDataQoS(),
     std::bind(&FakeBumper::laserCallback, this, _1));
 }
 
@@ -41,11 +41,11 @@ FakeBumper::laserCallback(const LaserScan::UniquePtr msg)
     pressed_.state = BumperEvent::RELEASED;
     bumper_pub_->publish(pressed_);
   } else {
-    size_t pos = 0, threshold_left = msg->ranges.size() / 4,
-      threshold_right = msg->ranges.size() - threshold_left;
+    size_t pos = 0, threshold_right = msg->ranges.size() / 4,
+      threshold_left = msg->ranges.size() - threshold_right;
 
     for (size_t i = 0; i < msg->ranges.size(); i++) {
-      if (msg->ranges[i] < OBSTACLE_DISTANCE && (i<threshold_left || i> threshold_right)) {
+      if (msg->ranges[i] < OBSTACLE_DISTANCE && (i > threshold_left || i < threshold_right)) {
         pressed_.state = BumperEvent::PRESSED;
         pos = i;
         break;
@@ -54,12 +54,12 @@ FakeBumper::laserCallback(const LaserScan::UniquePtr msg)
 
     if (!pressed_.state) {return;}
 
-    size_t threshold_center_left = threshold_left / 3,
-      threshold_center_right = msg->ranges.size() - threshold_center_left;
+    size_t threshold_center_right = threshold_right / 3,
+      threshold_center_left = msg->ranges.size() - threshold_center_right;
 
     if (pos > threshold_center_left && pos < threshold_left) {
       pressed_.bumper = BumperEvent::LEFT;
-    } else if (pos > threshold_right && pos < threshold_center_right) {
+    } else if (pos < threshold_right && pos > threshold_center_right) {
       pressed_.bumper = BumperEvent::RIGHT;
     } else {
       pressed_.bumper = BumperEvent::CENTER;

@@ -21,11 +21,13 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import (
     DeclareLaunchArgument,
-    IncludeLaunchDescription
+    IncludeLaunchDescription,
+    SetEnvironmentVariable
 )
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
+from launch_ros.actions import Node
 
 
 def generate_launch_description():
@@ -65,11 +67,31 @@ def generate_launch_description():
             'launch/'), 'spawn.launch.py']),
     )
 
+    fake_bumper = Node(
+        package='kobuki',
+        executable='fake_bumer_node',
+        name='fake_bumer_node',
+        output='screen',
+    )
+
+    model_path = ''
+    resource_path = ''
+    pkg_path = get_package_share_directory('kobuki')
+    model_path += os.path.join(pkg_path, 'models')
+    resource_path += pkg_path + model_path
+
+    if 'GZ_SIM_MODEL_PATH' in os.environ:
+        model_path += os.pathsep+os.environ['GZ_SIM_MODEL_PATH']
+    if 'GZ_SIM_RESOURCE_PATH' in os.environ:
+        resource_path += os.pathsep+os.environ['GZ_SIM_RESOURCE_PATH']
+
     ld = LaunchDescription()
     ld.add_action(world_arg)
     ld.add_action(gui_arg)
     ld.add_action(gazebo_server)
     ld.add_action(gazebo_client)
+    ld.add_action(SetEnvironmentVariable('GZ_SIM_RESOURCE_PATH', model_path))
     ld.add_action(spawn_robot)
+    ld.add_action(fake_bumper)
 
     return ld
