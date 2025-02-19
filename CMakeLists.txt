@@ -36,7 +36,7 @@ install(TARGETS
   DESTINATION lib/${PROJECT_NAME}
 )
 
-install(DIRECTORY launch config maps worlds models
+install(DIRECTORY launch config maps worlds rviz models
         DESTINATION share/${PROJECT_NAME})
 
 install(

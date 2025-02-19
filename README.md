@@ -103,6 +103,9 @@ ros2 launch kobuki navigation_sim.launch.py
 
 If you want to use another map, you have to put the route in the map parameter
 
+# Multi-Robot setup
+If you want to launch a system with multiple robots, you can follow the instructions in [launch/multirobot/README.md](launch/multirobot/README.md).
+**Note:** Right now only the simulation mode is supported for the Multi-Robot setup.
 
 # About
 

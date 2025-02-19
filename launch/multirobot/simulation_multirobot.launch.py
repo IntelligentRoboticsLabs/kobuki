@@ -21,13 +21,47 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import (
     DeclareLaunchArgument,
-    IncludeLaunchDescription,
-    SetEnvironmentVariable
+    IncludeLaunchDescription
 )
+from launch.actions import OpaqueFunction
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
-from launch_ros.actions import Node
+import yaml
+
+
+def spawn_robots(context):
+    """Read the YAML configuration file and spawn the robots defined in it."""
+    config_file = LaunchConfiguration('robots_config_file').perform(context)
+
+    def convert_floats_to_strings(data):
+        """
+        Convert all float params in a dict to strings.
+
+        This is required because all launch arguments must be strings.
+        """
+        if isinstance(data, dict):
+            return {k: convert_floats_to_strings(v) for k, v in data.items()}
+        elif isinstance(data, list):
+            return [convert_floats_to_strings(i) for i in data]
+        elif isinstance(data, float):
+            return str(data)
+        else:
+            return data
+
+    config_robots = yaml.safe_load(open(config_file, 'r'))
+    config_robots = convert_floats_to_strings(config_robots)
+
+    robot_actions = []
+    for robot_args in config_robots['robots']:
+        spawn_robot = IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([os.path.join(
+                get_package_share_directory('kobuki_description'),
+                'launch/'), 'spawn.launch.py']),
+            launch_arguments=robot_args.items()
+        )
+        robot_actions.append(spawn_robot)
+    return robot_actions
 
 
 def generate_launch_description():
@@ -42,6 +76,22 @@ def generate_launch_description():
         'gui',
         default_value='true',
         description='Set to false to run gazebo headless',
+    )
+
+    robots_config_arg = DeclareLaunchArgument(
+        'robots_config_file',
+        default_value=os.path.join(
+            get_package_share_directory('kobuki'),
+            'config', 'multirobot',
+            'multirobot_config.yaml'),
+        description='YAML file with the configuration of the robots to be spawned',
+    )
+
+    # This argument is automatically forwarded to kobuki_description / spawn.launch.py
+    declare_do_tf_remapping_arg = DeclareLaunchArgument(
+        'do_tf_remapping',
+        default_value='False',
+        description='Whether to remap the tf topics to independent namespaces (/tf -> tf)',
     )
 
     gazebo_server = IncludeLaunchDescription(
@@ -61,37 +111,13 @@ def generate_launch_description():
         condition=IfCondition(LaunchConfiguration('gui')),
     )
 
-    spawn_robot = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory('kobuki_description'),
-            'launch/'), 'spawn.launch.py']),
-    )
-
-    fake_bumper = Node(
-        package='kobuki',
-        executable='fake_bumer_node',
-        name='fake_bumer_node',
-        output='screen',
-    )
-
-    model_path = ''
-    resource_path = ''
-    pkg_path = get_package_share_directory('kobuki')
-    model_path += os.path.join(pkg_path, 'models')
-    resource_path += pkg_path + model_path
-
-    if 'GZ_SIM_MODEL_PATH' in os.environ:
-        model_path += os.pathsep+os.environ['GZ_SIM_MODEL_PATH']
-    if 'GZ_SIM_RESOURCE_PATH' in os.environ:
-        resource_path += os.pathsep+os.environ['GZ_SIM_RESOURCE_PATH']
-
     ld = LaunchDescription()
     ld.add_action(world_arg)
     ld.add_action(gui_arg)
+    ld.add_action(robots_config_arg)
+    ld.add_action(declare_do_tf_remapping_arg)
     ld.add_action(gazebo_server)
     ld.add_action(gazebo_client)
-    ld.add_action(SetEnvironmentVariable('GZ_SIM_RESOURCE_PATH', model_path))
-    ld.add_action(spawn_robot)
-    ld.add_action(fake_bumper)
+    ld.add_action(OpaqueFunction(function=spawn_robots))
 
     return ld
