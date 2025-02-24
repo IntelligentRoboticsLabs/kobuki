@@ -42,7 +42,7 @@ private:
 
   BumperEvent pressed_;
 
-  static constexpr float OBSTACLE_DISTANCE = 0.2f;
+  static constexpr float OBSTACLE_DISTANCE = 0.3f;
 };
 
 }  // namespace kobuki
