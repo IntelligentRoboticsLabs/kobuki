@@ -41,7 +41,7 @@ FakeBumper::laserCallback(const LaserScan::UniquePtr msg)
     pressed_.state = BumperEvent::RELEASED;
     bumper_pub_->publish(pressed_);
   } else {
-    // TODO: Delete values
+    // TODO(Juancams): Delete values
     size_t pos = 0, threshold_right = 270,
       threshold_left = 90;
 
@@ -55,7 +55,7 @@ FakeBumper::laserCallback(const LaserScan::UniquePtr msg)
 
     if (!pressed_.state) {return;}
 
-    // TODO: Delete values
+    // TODO(Juancams): Delete values
     size_t threshold_center_right = 210,
       threshold_center_left = 150;
 
