@@ -1,0 +1,29 @@
+# This configuration file is used by the simulation_multirobot.launch.py launch file
+# to spawn multiple robots in the simulation.
+# The configuration parameters are forwarded to the spawn.launch.py in the kobuki_description package as launch arguments.
+# Please check its documentation for more information on the parameters.
+# This is the list of the possible arguments with their default arguments:
+#   name: kobuki        # Model name used in gazebo
+#   namespace: ""       # Namespace to apply to the nodes, topics and TF frames
+#   # Robot position
+#   x: 0.0
+#   y: 0.0
+#   z: 0.0
+#   # Robot orientation (roll, pitch, yaw)
+#   R: 0.0
+#   P: 0.0
+#   Y: 0.0
+#   lidar: true         # Enable lidar sensor
+#   camera: true        # Enable camera sensor
+#   use_sim_time: true  # Use simulation time
+
+
+robots:
+- name: kobuki_1
+  namespace: r1
+
+- name: kobuki_2
+  namespace: r2
+  x: 2.0
+  y: 1.0
+  Y: 0.0
