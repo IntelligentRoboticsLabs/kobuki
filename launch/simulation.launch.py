@@ -86,11 +86,11 @@ def generate_launch_description():
         resource_path += os.pathsep+os.environ['GZ_SIM_RESOURCE_PATH']
 
     ld = LaunchDescription()
+    ld.add_action(SetEnvironmentVariable('GZ_SIM_RESOURCE_PATH', model_path))
     ld.add_action(world_arg)
     ld.add_action(gui_arg)
     ld.add_action(gazebo_server)
     ld.add_action(gazebo_client)
-    ld.add_action(SetEnvironmentVariable('GZ_SIM_RESOURCE_PATH', model_path))
     ld.add_action(spawn_robot)
     ld.add_action(fake_bumper)
 
