@@ -29,8 +29,8 @@ repositories:
     version: devel
   ThirdParty/kobuki_ros:
     type: git
-    url: https://github.com/Juancams/kobuki_ros.git
-    version: jazzy-devel
+    url: https://github.com/juandpenan/kobuki_ros.git
+    version: patch-1
   ThirdParty/openni2_camera:
     type: git
     url: https://github.com/ros-drivers/openni2_camera.git
