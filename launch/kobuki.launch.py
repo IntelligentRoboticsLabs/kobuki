@@ -67,7 +67,8 @@ def start_lidar(context):
                 'serial_port': '/dev/rplidar',
                 'serial_baudrate': 115200,  # A1 / A2
                 'frame_id': 'laser_link',
-                'inverted': True,
+                'inverted': False,
+                'flip_x_axis': True,
                 'namespace': LaunchConfiguration('namespace'),
                 'angle_compensate': True,
             }],
@@ -92,7 +93,8 @@ def start_lidar(context):
                 'serial_port': '/dev/rplidar',
                 'serial_baudrate': 1000000,  # S2
                 'frame_id': 'laser_link',
-                'inverted': True,
+                'inverted': False,
+                'flip_x_axis': True,  # todo(juandpenan) check with this with the new TF
                 'namespace': LaunchConfiguration('namespace'),
                 'angle_compensate': True,
             }],
