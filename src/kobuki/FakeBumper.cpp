@@ -60,9 +60,9 @@ FakeBumper::laserCallback(const LaserScan::UniquePtr msg)
       threshold_center_left = 150;
 
     if (pos < threshold_center_left && pos > threshold_left) {
-      pressed_.bumper = BumperEvent::LEFT;
-    } else if (pos < threshold_right && pos > threshold_center_right) {
       pressed_.bumper = BumperEvent::RIGHT;
+    } else if (pos < threshold_right && pos > threshold_center_right) {
+      pressed_.bumper = BumperEvent::LEFT;
     } else {
       pressed_.bumper = BumperEvent::CENTER;
     }
