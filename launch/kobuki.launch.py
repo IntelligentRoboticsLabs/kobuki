@@ -44,9 +44,19 @@ def start_description(context):
         description.append(lidar)
 
     robot_description = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory('kobuki_description'),
-            'launch/'), 'kobuki_description.launch.py'])
+        PythonLaunchDescriptionSource(
+            os.path.join(get_package_share_directory('kobuki_description'),
+                         'launch/kobuki_description.launch.py')
+        ),
+        launch_arguments={
+            'lidar': LaunchConfiguration('lidar'),
+            'lidar_position_x': '0',
+            'lidar_position_y': '0',
+            'lidar_position_z': '0.37',
+            'lidar_orientation_roll': '3.14',
+            'lidar_orientation_pitch': '0',
+            'lidar_orientation_yaw': '0',
+        }.items()
     )
 
     return description + [robot_description]
