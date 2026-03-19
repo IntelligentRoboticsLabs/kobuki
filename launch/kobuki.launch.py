@@ -20,8 +20,10 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import (
     DeclareLaunchArgument,
+    GroupAction,
     IncludeLaunchDescription,
-    OpaqueFunction
+    OpaqueFunction,
+    SetLaunchConfiguration
 )
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
@@ -33,15 +35,19 @@ def start_description(context):
 
     description = []
 
+    camera = DeclareLaunchArgument('camera', default_value='false')
+    description.append(camera)
+
+    lidar = DeclareLaunchArgument('lidar', default_value='false')
+    description.append(lidar)
+
     if (LaunchConfiguration('xtion').perform(context) == 'true' or
             LaunchConfiguration('astra').perform(context) == 'true'):
-        camera = DeclareLaunchArgument('camera', default_value='true')
-        description.append(camera)
+        description.append(SetLaunchConfiguration('camera', 'true'))
 
     if (LaunchConfiguration('lidar_a2').perform(context) == 'true' or
             LaunchConfiguration('lidar_s2').perform(context) == 'true'):
-        lidar = DeclareLaunchArgument('lidar', default_value='true')
-        description.append(lidar)
+        description.append(SetLaunchConfiguration('lidar', 'true'))
 
     robot_description = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -125,10 +131,16 @@ def start_lidar(context):
 def start_camera(context):
 
     if LaunchConfiguration('xtion').perform(context) == 'true':
-        xtion_cmd = IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([os.path.join(
-                get_package_share_directory('openni2_camera'),
-                'launch/'), 'camera_with_cloud.launch.py']),
+        xtion_cmd = GroupAction(
+            scoped=True,
+            actions=[
+                SetLaunchConfiguration('namespace', 'camera'),
+                IncludeLaunchDescription(
+                    PythonLaunchDescriptionSource([os.path.join(
+                        get_package_share_directory('openni2_camera'),
+                        'launch/'), 'camera_with_cloud.launch.py']),
+                )
+            ]
         )
 
         return [xtion_cmd]
