@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Modified by Juan Carlos Manzanares Serrano
+# Modified by Juan Carlos Manzanares Serrano & Rui Bartolome Segura
 
 import os
 
@@ -30,6 +30,30 @@ from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 import yaml
 
+import subprocess
+
+astra = False
+xtion= False
+
+try:
+    result = subprocess.run(
+        ["lsusb"],
+        capture_output=True,
+        text=True
+    )
+
+    for line in result.stdout.splitlines():
+        if "Astra" in line:
+            astra = True
+        elif "Xtion" in line:
+            xtion = True
+
+except FileNotFoundError:
+    print("lsusb is not avaliable in the system")
+
+
+except subprocess.CalledProcessError as e:
+    print("Error running lsusb:", e.stderr)
 
 def start_description(context):
 
@@ -41,8 +65,8 @@ def start_description(context):
     lidar = DeclareLaunchArgument('lidar', default_value='false')
     description.append(lidar)
 
-    if (LaunchConfiguration('xtion').perform(context) == 'true' or
-            LaunchConfiguration('astra').perform(context) == 'true'):
+
+    if astra or xtion:
         description.append(SetLaunchConfiguration('camera', 'true'))
 
     if (LaunchConfiguration('lidar_a2').perform(context) == 'true' or
@@ -130,7 +154,7 @@ def start_lidar(context):
 
 def start_camera(context):
 
-    if LaunchConfiguration('xtion').perform(context) == 'true':
+    if xtion:
         xtion_cmd = GroupAction(
             scoped=True,
             actions=[
@@ -145,7 +169,7 @@ def start_camera(context):
 
         return [xtion_cmd]
 
-    if LaunchConfiguration('astra').perform(context) == 'true':
+    if astra:
         astra_cmd = IncludeLaunchDescription(
             PythonLaunchDescriptionSource([os.path.join(
                 get_package_share_directory('astra_camera'),
